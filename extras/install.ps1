@@ -30,23 +30,25 @@ Write-Host "Determining latest nezha release" -BackgroundColor DarkGreen -Foregr
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $agenttag = (Invoke-WebRequest -Uri $agentreleases -UseBasicParsing | ConvertFrom-Json)[0].tag_name
 if ([string]::IsNullOrWhiteSpace($agenttag)) {
-    $optionUrl = "https://fastly.jsdelivr.net/gh/nezhahq/agent/"
-    Try {
-        $response = Invoke-WebRequest -Uri $optionUrl -UseBasicParsing -TimeoutSec 10
-        if ($response.StatusCode -eq 200) {
-            $versiontext = $response.Content | findstr /c:"option.value"
-            $version = [regex]::Match($versiontext, "@(\d+\.\d+\.\d+)").Groups[1].Value
-            $agenttag = "v" + $version
-        }
-    } Catch {
-        $optionUrl = "https://gcore.jsdelivr.net/gh/nezhahq/agent/"
-        $response = Invoke-WebRequest -Uri $optionUrl -UseBasicParsing -TimeoutSec 10
-        if ($response.StatusCode -eq 200) {
-            $versiontext = $response.Content | findstr /c:"option.value"
-            $version = [regex]::Match($versiontext, "@(\d+\.\d+\.\d+)").Groups[1].Value
-            $agenttag = "v" + $version
-        }
-    }
+    # $optionUrl = "https://fastly.jsdelivr.net/gh/nezhahq/agent/"
+    # Try {
+    #     $response = Invoke-WebRequest -Uri $optionUrl -UseBasicParsing -TimeoutSec 10
+    #     if ($response.StatusCode -eq 200) {
+    #         $versiontext = $response.Content | findstr /c:"option.value"
+    #         $version = [regex]::Match($versiontext, "@(\d+\.\d+\.\d+)").Groups[1].Value
+    #         $agenttag = "v" + $version
+    #     }
+    # } Catch {
+    #     $optionUrl = "https://gcore.jsdelivr.net/gh/nezhahq/agent/"
+    #     $response = Invoke-WebRequest -Uri $optionUrl -UseBasicParsing -TimeoutSec 10
+    #     if ($response.StatusCode -eq 200) {
+    #         $versiontext = $response.Content | findstr /c:"option.value"
+    #         $version = [regex]::Match($versiontext, "@(\d+\.\d+\.\d+)").Groups[1].Value
+    #         $agenttag = "v" + $version
+    #     }
+    # }
+    $version = "0.20.5"
+    $agenttag = "v" + $version
 }
 #Region判断
 $ipapi = ""
